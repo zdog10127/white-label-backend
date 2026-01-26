@@ -1,20 +1,13 @@
-using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-using MongoDB.Bson.Serialization.IdGenerators;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace WhiteLabel.Domain.Entity
+namespace WhiteLabel.Domain.Dto.Request
 {
-    public class User
+    public class RegisterRequestDto
     {
-        [BsonId]
-        [BsonRepresentation(BsonType.ObjectId)]
-        public string Id { get; set; }
-
         [Required(ErrorMessage = "Name is required")]
         [StringLength(200)]
         public string Name { get; set; }
@@ -27,16 +20,12 @@ namespace WhiteLabel.Domain.Entity
         [MinLength(6, ErrorMessage = "Password must be at least 6 characters")]
         public string Password { get; set; }
 
-        public string Role { get; set; } = "user"; 
-
-        public bool Active { get; set; } = true;
+        [Required(ErrorMessage = "Password confirmation is required")]
+        [Compare("Password", ErrorMessage = "Passwords do not match")]
+        public string ConfirmPassword { get; set; }
 
         public string Phone { get; set; }
 
-        [BsonDateTimeOptions(Kind = DateTimeKind.Local)]
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
-
-        [BsonDateTimeOptions(Kind = DateTimeKind.Local)]
-        public DateTime UpdatedAt { get; set; } = DateTime.Now;
+        public string Role { get; set; } = "user";
     }
 }

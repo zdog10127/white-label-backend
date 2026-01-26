@@ -10,6 +10,10 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhiteLabel.Infra", "WhiteLabel.Infra\WhiteLabel.Infra.csproj", "{476C6723-ADC8-408E-A39A-ECA3FFDF4BEA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhiteLabel.Service", "WhiteLabel.Service\WhiteLabel.Service.csproj", "{A7115905-34E4-48DD-AEB3-004B2F7BFC8A}"
+	ProjectSection(ProjectDependencies) = postProject
+		{476C6723-ADC8-408E-A39A-ECA3FFDF4BEA} = {476C6723-ADC8-408E-A39A-ECA3FFDF4BEA}
+		{B3FA12FB-EE03-4B70-8EFF-AC8EC0658366} = {B3FA12FB-EE03-4B70-8EFF-AC8EC0658366}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WhiteLabel.Utility", "WhiteLabel.Utility\WhiteLabel.Utility.csproj", "{BD02CC5C-CD52-4622-812F-1F7FA327291F}"
 EndProject
