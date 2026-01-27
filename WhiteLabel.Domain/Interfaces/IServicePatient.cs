@@ -3,18 +3,18 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WhiteLabel.Domain.Dto.Request;
-using WhiteLabel.Domain.Dto.Response;
+using WhiteLabel.Domain.Entities;
 
 namespace WhiteLabel.Domain.Interfaces
 {
     public interface IServicePatient
     {
-        Task<PatientResponseDto> CreateAsync(CreatePatientRequestDto dto, string userId);
-        Task<PatientResponseDto> GetByIdAsync(string id);
-        Task<IEnumerable<PatientResponseDto>> GetAllAsync();
-        Task<PatientResponseDto> UpdateAsync(string id, UpdatePatientRequestDto dto);
+        Task<Patient> CreateAsync(CreatePatientRequestDto dto, string userId);
+        Task<Patient> GetByIdAsync(string id);
+        Task<IEnumerable<Patient>> GetAllAsync();
+        Task<Patient> UpdateAsync(string id, UpdatePatientRequestDto dto);
         Task<bool> DeleteAsync(string id);
-        Task<IEnumerable<PatientResponseDto>> GetByStatusAsync(string status);
-        Task<IEnumerable<PatientResponseDto>> GetActiveAsync();
+        Task<IEnumerable<Patient>> GetByStatusAsync(string status);
+        Task<IEnumerable<Patient>> GetActiveAsync();
     }
 }

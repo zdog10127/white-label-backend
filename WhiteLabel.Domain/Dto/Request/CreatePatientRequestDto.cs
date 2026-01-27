@@ -32,15 +32,36 @@ namespace WhiteLabel.Domain.Dto.Request
         [EmailAddress]
         public string Email { get; set; }
 
-        [Required]
         public AddressRequestDto Address { get; set; }
 
-        [Required]
         public CancerRequestDto Cancer { get; set; }
 
+        public MedicalHistoryRequestDto MedicalHistory { get; set; }
+
+        public List<MedicationRequestDto> Medications { get; set; } = new List<MedicationRequestDto>();
+
+        [Required(ErrorMessage = "SUS Card is required")]
         public string SUSCard { get; set; }
+
+        [Required(ErrorMessage = "Hospital Card is required")]
         public string HospitalCard { get; set; }
 
+        public decimal? FamilyIncome { get; set; }
+        public int? NumberOfResidents { get; set; }
+        public List<FamilyCompositionRequestDto> FamilyComposition { get; set; } = new List<FamilyCompositionRequestDto>();
+
+        public string Status { get; set; } = "Under Review";
+
+        public bool Active { get; set; } = true;
+
+        // NOVOS CAMPOS AMPARA
+        public int? TreatmentYear { get; set; }
+        public bool FiveYears { get; set; } = false;
+        public DateTime? DeathDate { get; set; }
         public bool AuthorizeImage { get; set; } = false;
+
+        public string Notes { get; set; }
+
+        public DocumentsRequestDto Documents { get; set; } = new DocumentsRequestDto();
     }
 }
