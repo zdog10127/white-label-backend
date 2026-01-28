@@ -24,6 +24,10 @@ namespace WhiteLabel.Infra.Contexts
         public IMongoCollection<Client> Client { get; }
         public IMongoCollection<Domain.Entities.Address> Address { get; }
 
+        public IMongoCollection<MedicalReport> MedicalReport { get; }
+
+        public IMongoCollection<Evolution> Evolution { get; }
+
         public Context(IOptions<MongoDBSettings> settings, ILogger<Context> logger)
         {
             _logger = logger;
@@ -43,6 +47,8 @@ namespace WhiteLabel.Infra.Contexts
                 AdditionalData = _database.GetCollection<AdditionalData>("additionalData");
                 Client = _database.GetCollection<Client>("client");
                 Address = _database.GetCollection<Domain.Entities.Address>("address");
+                MedicalReport = _database.GetCollection<MedicalReport>("medicalReport");
+                Evolution = _database.GetCollection<Evolution>("evolution");
 
                 _logger.LogInformation("MongoDB Context initialized successfully");
             }

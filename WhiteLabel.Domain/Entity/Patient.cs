@@ -25,11 +25,10 @@ namespace WhiteLabel.Domain.Entities
         public DateTime BirthDate { get; set; }
 
         [Required(ErrorMessage = "Gender is required")]
-        public string Gender { get; set; } 
+        public string Gender { get; set; }
 
         public string MaritalStatus { get; set; }
 
-        // Contact
         [Required(ErrorMessage = "Phone is required")]
         public string Phone { get; set; }
 
@@ -62,7 +61,7 @@ namespace WhiteLabel.Domain.Entities
         [BsonDateTimeOptions(Kind = DateTimeKind.Local)]
         public DateTime? NextReviewDate { get; set; }
 
-        public string Status { get; set; } = "Under Review"; 
+        public string Status { get; set; } = "Under Review";
 
         public bool Active { get; set; } = true;
 
@@ -84,14 +83,13 @@ namespace WhiteLabel.Domain.Entities
 
     public class Address
     {
-        [Required]
         public string Street { get; set; }
         public string Number { get; set; }
         public string Complement { get; set; }
-        
+
         [Required]
         public string Neighborhood { get; set; }
-        
+
         public string City { get; set; } = "Araxá";
         public string State { get; set; } = "MG";
         public string ZipCode { get; set; }

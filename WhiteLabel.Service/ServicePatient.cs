@@ -43,8 +43,8 @@ namespace WhiteLabel.Service
                     Number = dto.Address.Number,
                     Complement = dto.Address.Complement,
                     Neighborhood = dto.Address.Neighborhood,
-                    City = dto.Address.City ?? "Araxá",
-                    State = dto.Address.State ?? "MG",
+                    City = dto.Address.City,
+                    State = dto.Address.State,
                     ZipCode = dto.Address.ZipCode
                 } : null,
                 
@@ -53,7 +53,7 @@ namespace WhiteLabel.Service
                     Type = dto.Cancer.Type,
                     DetectionDate = dto.Cancer.DetectionDate,
                     Stage = dto.Cancer.Stage,
-                    TreatmentLocation = dto.Cancer.TreatmentLocation ?? "Hospital de Araxá",
+                    TreatmentLocation = dto.Cancer.TreatmentLocation,
                     TreatmentStartDate = dto.Cancer.TreatmentStartDate,
                     CurrentTreatment = dto.Cancer.CurrentTreatment,
                     HasBiopsyResult = dto.Cancer.HasBiopsyResult
@@ -92,10 +92,9 @@ namespace WhiteLabel.Service
                     Profession = f.Profession
                 }).ToList() ?? new List<FamilyComposition>(),
                 
-                Status = dto.Status ?? "Under Review",
+                Status = dto.Status,
                 Active = dto.Active,
                 
-                // NOVOS CAMPOS AMPARA
                 TreatmentYear = dto.TreatmentYear,
                 FiveYears = dto.FiveYears,
                 DeathDate = dto.DeathDate,
