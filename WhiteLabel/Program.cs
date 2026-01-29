@@ -119,9 +119,14 @@ builder.Services.AddCors(options =>
 });
 builder.Services.AddScoped<IRepositoryUser, RepositoryUser>();
 builder.Services.AddScoped<IPatientRepository, RepositoryPatient>();
+builder.Services.AddScoped<IRepositoryEvolution, RepositoryEvolution>();
+builder.Services.AddScoped<IRepositoryMedicalReport, RepositoryMedicalReport>();
 
 builder.Services.AddScoped<IServiceAuth, ServiceAuth>();
 builder.Services.AddScoped<IServicePatient, ServicePatient>();
+builder.Services.AddScoped<IServiceEvolution, ServiceEvolution>();
+builder.Services.AddScoped<IServiceMedicalReport, ServiceMedicalReport>();
+builder.Services.AddScoped<IServiceUser, ServiceUser>();
 
 builder.Services.AddHealthChecks()
     .AddCheck("mongodb", () =>
