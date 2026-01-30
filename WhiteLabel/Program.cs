@@ -127,6 +127,7 @@ builder.Services.AddScoped<IServicePatient, ServicePatient>();
 builder.Services.AddScoped<IServiceEvolution, ServiceEvolution>();
 builder.Services.AddScoped<IServiceMedicalReport, ServiceMedicalReport>();
 builder.Services.AddScoped<IServiceUser, ServiceUser>();
+builder.Services.AddScoped<IServiceReport, ServiceReport>();
 
 builder.Services.AddHealthChecks()
     .AddCheck("mongodb", () =>
