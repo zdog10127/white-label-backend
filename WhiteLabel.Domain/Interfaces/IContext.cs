@@ -18,6 +18,7 @@ namespace WhiteLabel.Domain.Interfaces
         IMongoCollection<Entities.Address> Address { get; }
         IMongoCollection<MedicalReport> MedicalReport { get; }
         IMongoCollection<Evolution> Evolution { get; }
+        IMongoCollection<Appointment> Appointment { get; }
         bool IsConnected();
         IMongoDatabase GetDatabase();
     }

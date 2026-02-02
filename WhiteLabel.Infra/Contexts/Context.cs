@@ -28,6 +28,7 @@ namespace WhiteLabel.Infra.Contexts
 
         public IMongoCollection<Evolution> Evolution { get; }
 
+        public IMongoCollection<Appointment> Appointment { get; }
         public Context(IOptions<MongoDBSettings> settings, ILogger<Context> logger)
         {
             _logger = logger;
@@ -49,6 +50,7 @@ namespace WhiteLabel.Infra.Contexts
                 Address = _database.GetCollection<Domain.Entities.Address>("address");
                 MedicalReport = _database.GetCollection<MedicalReport>("medicalReport");
                 Evolution = _database.GetCollection<Evolution>("evolution");
+                Appointment = _database.GetCollection<Appointment>("appointment");
 
                 _logger.LogInformation("MongoDB Context initialized successfully");
             }
