@@ -15,7 +15,18 @@ builder.Logging.AddConsole();
 builder.Logging.AddDebug();
 builder.Logging.AddConfiguration(builder.Configuration.GetSection("Logging"));
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .ConfigureApiBehaviorOptions(options =>
+    {
+        options.SuppressModelStateInvalidFilter = true;
+    });
+
+// Configurar rotas em minúsculo
+builder.Services.AddRouting(options => 
+{
+    options.LowercaseUrls = true;
+    options.LowercaseQueryStrings = false;
+});
 builder.Services.AddEndpointsApiExplorer();
 
 builder.Services.AddSwaggerGen(c =>
@@ -111,24 +122,37 @@ builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
     {
-        policy.SetIsOriginAllowed(origin => true)
-              .AllowAnyMethod()
-              .AllowAnyHeader()
-              .AllowCredentials();
+        if (builder.Environment.IsDevelopment())
+        {
+            // Em desenvolvimento, aceita qualquer origem
+            policy.AllowAnyOrigin()
+                  .AllowAnyMethod()
+                  .AllowAnyHeader();
+        }
+        else
+        {
+            // Em produção, apenas origens específicas
+            var allowedOrigins = builder.Configuration.GetSection("Cors:AllowedOrigins").Get<string[]>();
+            policy.WithOrigins(allowedOrigins ?? new[] { "http://localhost:3000" })
+                  .AllowAnyMethod()
+                  .AllowAnyHeader()
+                  .AllowCredentials();
+        }
     });
 });
+
 builder.Services.AddScoped<IRepositoryUser, RepositoryUser>();
 builder.Services.AddScoped<IPatientRepository, RepositoryPatient>();
-builder.Services.AddScoped<IRepositoryEvolution, RepositoryEvolution>();
 builder.Services.AddScoped<IRepositoryMedicalReport, RepositoryMedicalReport>();
-builder.Services.AddScoped<IRepositoryAppointment, RepositoryAppointment>();
+builder.Services.AddScoped<IRepositoryEvolution, RepositoryEvolution>();
 
 builder.Services.AddScoped<IServiceAuth, ServiceAuth>();
 builder.Services.AddScoped<IServicePatient, ServicePatient>();
-builder.Services.AddScoped<IServiceEvolution, ServiceEvolution>();
 builder.Services.AddScoped<IServiceMedicalReport, ServiceMedicalReport>();
+builder.Services.AddScoped<IServiceEvolution, ServiceEvolution>();
 builder.Services.AddScoped<IServiceUser, ServiceUser>();
 builder.Services.AddScoped<IServiceReport, ServiceReport>();
+builder.Services.AddScoped<IRepositoryAppointment, RepositoryAppointment>();
 builder.Services.AddScoped<IServiceAppointment, ServiceAppointment>();
 
 builder.Services.AddHealthChecks()
