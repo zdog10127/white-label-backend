@@ -22,7 +22,7 @@ builder.Services.AddControllers()
     });
 
 // Configurar rotas em minúsculo
-builder.Services.AddRouting(options => 
+builder.Services.AddRouting(options =>
 {
     options.LowercaseUrls = true;
     options.LowercaseQueryStrings = false;
@@ -78,8 +78,31 @@ builder.Services.AddSingleton<IContext, Context>();
 builder.Services.Configure<JwtSettings>(
     builder.Configuration.GetSection("JwtSettings"));
 
-var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>();
-var key = Encoding.UTF8.GetBytes(jwtSettings.SecretKey);
+// Configurar JWT Authentication
+var secretKey = builder.Configuration["JwtSettings:SecretKey"];
+var issuer = builder.Configuration["JwtSettings:Issuer"];
+var audience = builder.Configuration["JwtSettings:Audience"];
+
+// Log para debug
+var logger = LoggerFactory.Create(config => config.AddConsole()).CreateLogger<Program>();
+logger.LogInformation("🔑 JWT SecretKey loaded: {HasKey}", !string.IsNullOrEmpty(secretKey));
+logger.LogInformation("🔑 JWT Issuer: {Issuer}", issuer);
+logger.LogInformation("🔑 JWT Audience: {Audience}", audience);
+
+// Validar configurações
+if (string.IsNullOrEmpty(secretKey))
+{
+    logger.LogError("❌ JWT SecretKey is NULL or EMPTY! Check appsettings.json");
+    throw new InvalidOperationException("JWT SecretKey is not configured. Check appsettings.json");
+}
+
+if (secretKey.Length < 32)
+{
+    logger.LogError("❌ JWT SecretKey is too short! Length: {Length}", secretKey.Length);
+    throw new InvalidOperationException($"JWT SecretKey must be at least 32 characters long. Current length: {secretKey.Length}");
+}
+
+var key = Encoding.UTF8.GetBytes(secretKey);
 
 builder.Services.AddAuthentication(options =>
 {
@@ -94,8 +117,8 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = true,
         ValidateLifetime = true,
         ValidateIssuerSigningKey = true,
-        ValidIssuer = jwtSettings.Issuer,
-        ValidAudience = jwtSettings.Audience,
+        ValidIssuer = issuer,
+        ValidAudience = audience,
         IssuerSigningKey = new SymmetricSecurityKey(key),
         ClockSkew = TimeSpan.Zero
     };
@@ -104,14 +127,14 @@ builder.Services.AddAuthentication(options =>
     {
         OnAuthenticationFailed = context =>
         {
-            var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Program>>();
-            logger.LogError("Authentication failed: {Message}", context.Exception.Message);
+            var authLogger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Program>>();
+            authLogger.LogError("Authentication failed: {Message}", context.Exception.Message);
             return Task.CompletedTask;
         },
         OnTokenValidated = context =>
         {
-            var logger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Program>>();
-            logger.LogInformation("Token validated for user: {User}",
+            var authLogger = context.HttpContext.RequestServices.GetRequiredService<ILogger<Program>>();
+            authLogger.LogInformation("Token validated for user: {User}",
                 context.Principal?.Identity?.Name ?? "Unknown");
             return Task.CompletedTask;
         }
@@ -181,15 +204,12 @@ using (var scope = app.Services.CreateScope())
     }
 }
 
-if (app.Environment.IsDevelopment())
+app.UseSwagger();
+app.UseSwaggerUI(c =>
 {
-    app.UseSwagger();
-    app.UseSwaggerUI(c =>
-    {
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "White Label API V1");
-        c.RoutePrefix = "swagger";
-    });
-}
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "White Label API V1");
+    c.RoutePrefix = "swagger";
+});
 
 app.Use(async (context, next) =>
 {
@@ -210,7 +230,6 @@ app.MapControllers();
 
 app.MapHealthChecks("/health");
 
-var logger = app.Services.GetRequiredService<ILogger<Program>>();
 logger.LogInformation("🚀 White Label API starting...");
 logger.LogInformation("📍 Environment: {Environment}", app.Environment.EnvironmentName);
 logger.LogInformation("⚙️  MongoDB: {ConnectionString}",
